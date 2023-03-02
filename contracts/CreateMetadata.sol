@@ -6,9 +6,18 @@ import "@openzeppelin-contracts/utils/Strings.sol";
 import "./BokkyPooBahsDateTimeLibrary.sol";
 import "@openzeppelin-contracts/token/ERC20/extensions/IERC20Metadata.sol";
 
+/**
+ * @title Creates metadata for on-chain SVG PDC NFT
+ * @notice Implements SVG Metadata
+ * @author Venkatesh, PDC Finance
+ **/
+
 contract CreateMetadata {
-    /* ========== HELPER FUNCTIONS ========== */
-    /// @notice  Converts wei to ether string with 2 decimal places
+    /**
+     * @notice Converts wei to ether string with 2 decimal places
+     * @param amountInWei Amount in wei
+     * @return Amount in string
+     */
     function weiToEtherString(uint256 amountInWei)
         public
         pure
@@ -26,6 +35,11 @@ contract CreateMetadata {
             );
     }
 
+    /**
+     * @notice Converts unix timestamp to date & time string
+     * @param _timestamp Unix timestamp
+     * @return Date and time in string
+     */
     function dateTimetoString(uint256 _timestamp)
         public
         pure
@@ -56,6 +70,11 @@ contract CreateMetadata {
             );
     }
 
+    /**
+     * @notice Get token symbol of an ERC-20 token
+     * @param _token ERC-20 token address
+     * @return _symbol ERC-20 token symbol
+     */
     function getTokenSymbol(address _token)
         public
         view
@@ -66,23 +85,15 @@ contract CreateMetadata {
         return _symbol;
     }
 
-    // function addressToString(address x) internal pure returns (string memory) {
-    //     bytes memory s = new bytes(40);
-    //     for (uint256 i = 0; i < 20; i++) {
-    //         bytes1 b = bytes1(uint8(uint256(uint160(x)) / (2**(8 * (19 - i)))));
-    //         bytes1 hi = bytes1(uint8(b) / 16);
-    //         bytes1 lo = bytes1(uint8(b) - 16 * uint8(hi));
-    //         s[2 * i] = char(hi);
-    //         s[2 * i + 1] = char(lo);
-    //     }
-    //     return string(s);
-    // }
-
-    // function char(bytes1 b) internal pure returns (bytes1 c) {
-    //     if (uint8(b) < 10) return bytes1(uint8(b) + 0x30);
-    //     else return bytes1(uint8(b) + 0x57);
-    // }
-
+    /**
+     * @notice Builds SVG Image
+     * @param _token ERC 20 token name of PDC
+     * @param _receiver Address of PDC receiver
+     * @param _amount Amount of the PDC
+     * @param _date Maturity date of the PDC
+     * @param tokenId Token ID of PDC NFT
+     * @return base64 encoded SVG image
+     */
     function buildImage(
         address _token,
         address _receiver,
@@ -90,7 +101,6 @@ contract CreateMetadata {
         uint256 _date,
         uint256 tokenId
     ) public view returns (string memory) {
-        string memory _tokenString = Strings.toHexString(_token);
         string memory _receiverString = Strings.toHexString(_receiver);
         string memory _amountString = weiToEtherString(_amount);
         string memory _dateString = dateTimetoString(_date);
@@ -196,6 +206,15 @@ contract CreateMetadata {
             );
     }
 
+    /**
+     * @notice Builds Metadata for PDC NFT
+     * @param _token ERC 20 token name of PDC
+     * @param _receiver Address of PDC receiver
+     * @param _amount Amount of the PDC
+     * @param _date Maturity date of the PDC
+     * @param tokenId Token ID of PDC NFT
+     * @return base64 encoded json metadata
+     */
     function buildMetadata(
         address _token,
         address _receiver,
@@ -203,8 +222,6 @@ contract CreateMetadata {
         uint256 _date,
         uint256 tokenId
     ) public view returns (string memory) {
-        string memory _tokenString = Strings.toHexString(_token);
-        string memory _receiverString = Strings.toHexString(_receiver);
         string memory _amountString = Strings.toString(_amount);
         string memory _dateString = Strings.toString(_date);
         string memory _issuerAddress = Strings.toHexString(msg.sender);
